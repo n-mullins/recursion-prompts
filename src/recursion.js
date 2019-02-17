@@ -591,26 +591,39 @@ var binarySearch = function(array, target, min, max) {
 // mergeSort([34,7,23,32,5,62]) // [5,7,23,32,34,62]
 // https://www.khanacademy.org/computing/computer-science/algorithms/merge-sort/a/divide-and-conquer-algorithms
 var mergeSort = function(array) {
-	let startIndex = 0;
-	let endIndex = array.length - 1;
-	if (startIndex >= endIndex) {
+	let midPoint = Math.floor((array.length - 1) / 2);
+	if (array.length >= 2) {
+		let leftHalf = mergeSort(array.slice(0, midPoint + 1));
+		let rightHalf = mergeSort(array.slice(midPoint + 1, array.length));
+		return merge(leftHalf, rightHalf);
+	} else {
 		return array;
 	}
-	let arrayCopy = array.slice(0)
-	for (let i = 0; i < arrayCopy.length - 1; i++) {
-		let placeHolder;
-		for (let j = i + 1; j < arrayCopy.length; j++) {
-			if (arrayCopy[j] < arrayCopy[i]) {
-				placeHolder = arrayCopy[j]; 
-				arrayCopy[j] = arrayCopy[i];
-				arrayCopy[i] = placeHolder;
+};
+
+var merge = function(leftHalf, rightHalf) {
+	let sortedArr = [];
+	let i = 0;
+	let j = 0;
+	for (let k = 0; k < leftHalf.length + rightHalf.length; k++) {
+		if (i < leftHalf.length && j < rightHalf.length) {
+			if (leftHalf[i] < rightHalf[j]) {
+				sortedArr[k] = leftHalf[i];
+				i++;
+			} else {
+				sortedArr[k] = rightHalf[j];
+				j++;
 			}
+		} else if (i < leftHalf.length) {
+			sortedArr[k] = leftHalf[i];
+			i++;
+		} else {
+			sortedArr[k] = rightHalf[j];
+			j++;
 		}
 	}
-	let leftArr = arrayCopy.slice(0, Math.floor(array.length - 1 / 2));
-	let rightArr = arrayCopy.slice(Math.floor(array.length - 1 / 2), array.length);
-	return mergeSort(leftArr).concat(mergeSort(rightArr));
-};
+	return sortedArr;
+}
 
 // 40. Deeply clone objects and arrays.
 // var obj1 = {a:1,b:{bb:{bbb:2}},c:3};
